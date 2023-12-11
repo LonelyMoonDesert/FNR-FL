@@ -93,17 +93,22 @@ Thanks goes to these wonderful people:
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/LonelyMoonDesert"><img src="https://avatars.githubusercontent.com/u/56340292?v=4" width="100px;" alt="LonelyMoonDesert"/><br /><sub><b>LonelyMoonDesert <3</b></sub></a><br /><a href="https://github.com/LonelyMoonDesert/FNR-FL/commits?author=LonelyMoonDesert" title="Code">💻</a> <a href="#design-YegorZaremba" title="Design">🎨</a> <a href="#ideas-YegorZaremba" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/LonelyMoonDesert"><img src="https://avatars.githubusercontent.com/u/56340292?v=4" width="100px;" alt="LonelyMoonDesert"/><br /><sub><b>LonelyMoonDesert</b></sub></a><br /><a href="https://github.com/LonelyMoonDesert/FNR-FL/commits?author=LonelyMoonDesert" title="Code">💻</a> <a href="" title="Design">🎨</a> <a href="" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
 
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
+## Acknowlegments
+
+We would like to express our sincere gratitude to the [Xtra-Computing Group](https://github.com/Xtra-Computing) for their [`NIID-Bench`](https://github.com/Xtra-Computing/NIID-Bench) repository, which has been instrumental in the development of our project. Our codebase is built upon the foundational work provided by their extensive research and resources in non-independent and identically distributed (non-i.i.d.) data for federated learning. We appreciate the opportunity to contribute to the ongoing dialogue in this field and thank the Xtra-Computing Group for their valuable contributions to the community.
 
 ## License
+
 [(Back to top)](#table-of-contents)
 
-[MIT license](./LICENSE-FNR-FL)
+[MIT license](./LICENSE_FNR-FL)
 
 
 
