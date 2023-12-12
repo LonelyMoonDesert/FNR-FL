@@ -268,20 +268,6 @@ def train_net(net_id, net, train_dataloader, test_dataloader, epochs, lr, args_o
         epoch_loss = sum(epoch_loss_collector) / len(epoch_loss_collector)
         logger.info('Epoch: %d Loss: %f' % (epoch, epoch_loss))
 
-        # train_acc = compute_accuracy_class(net, train_dataloader, device=device)
-        # test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
-
-        # writer.add_scalar('Accuracy/train', train_acc, epoch)
-        # writer.add_scalar('Accuracy/test', test_acc, epoch)
-
-        # if epoch % 10 == 0:
-        #     logger.info('Epoch: %d Loss: %f' % (epoch, epoch_loss))
-        #     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
-        #     test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
-        #
-        #     logger.info('>> Training accuracy: %f' % train_acc)
-        #     logger.info('>> Test accuracy: %f' % test_acc)
-
     # 训练完成后计算训练集和测试集的准确率
     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
     test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
@@ -298,8 +284,6 @@ def train_net(net_id, net, train_dataloader, test_dataloader, epochs, lr, args_o
 def train_net_fedprox(net_id, net, global_net, train_dataloader, test_dataloader, epochs, lr, args_optimizer, mu,
                       device="cpu"):
     logger.info('Training network %s' % str(net_id))
-    # logger.info('n_training: %d' % len(train_dataloader))
-    # logger.info('n_test: %d' % len(test_dataloader))
 
     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
     test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
@@ -359,13 +343,6 @@ def train_net_fedprox(net_id, net, global_net, train_dataloader, test_dataloader
         epoch_loss = sum(epoch_loss_collector) / len(epoch_loss_collector)
         logger.info('Epoch: %d Loss: %f' % (epoch, epoch_loss))
 
-        # if epoch % 10 == 0:
-        #     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
-        #     test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
-        #
-        #     logger.info('>> Training accuracy: %f' % train_acc)
-        #     logger.info('>> Test accuracy: %f' % test_acc)
-
     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
     test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
 
@@ -403,8 +380,6 @@ def train_net_scaffold(net_id, net, global_model, c_local, c_global, train_datal
         pass
     else:
         train_dataloader = [train_dataloader]
-
-    # writer = SummaryWriter()
 
     c_global_para = c_global.state_dict()
     c_local_para = c_local.state_dict()
@@ -478,8 +453,6 @@ def train_net_fednova(net_id, net, global_model, train_dataloader, test_dataload
     else:
         train_dataloader = [train_dataloader]
 
-    # writer = SummaryWriter()
-
     tau = 0
 
     for epoch in range(epochs):
@@ -511,7 +484,6 @@ def train_net_fednova(net_id, net, global_model, train_dataloader, test_dataload
     net_para = net.state_dict()
     norm_grad = copy.deepcopy(global_model.state_dict())
     for key in norm_grad:
-        # norm_grad[key] = (global_model_para[key] - net_para[key]) / a_i
         norm_grad[key] = torch.true_divide(global_model_para[key] - net_para[key], a_i)
     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
     test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
@@ -555,13 +527,7 @@ def train_net_moon(net_id, net, global_net, previous_nets, train_dataloader, tes
         for previous_net in previous_nets:
             previous_net.to(device)
     global_w = global_net.state_dict()
-    # oppsi_nets = copy.deepcopy(previous_nets)
-    # for net_id, oppsi_net in enumerate(oppsi_nets):
-    #     oppsi_w = oppsi_net.state_dict()
-    #     prev_w = previous_nets[net_id].state_dict()
-    #     for key in oppsi_w:
-    #         oppsi_w[key] = 2*global_w[key] - prev_w[key]
-    #     oppsi_nets.load_state_dict(oppsi_w)
+
     cnt = 0
     cos = torch.nn.CosineSimilarity(dim=-1).to(device)
     # mu = 0.001
@@ -599,8 +565,6 @@ def train_net_moon(net_id, net, global_net, previous_nets, train_dataloader, tes
 
                 logits /= temperature
                 labels = torch.zeros(x.size(0)).to(device).long()
-
-                # loss = criterion(out, target) + mu * ContraLoss(pro1, pro2, pro3)
 
                 loss2 = mu * criterion(logits, labels)
 
@@ -641,8 +605,6 @@ def train_net_moon(net_id, net, global_net, previous_nets, train_dataloader, tes
 def train_net_classifier_calibration(net_id, net, global_net, train_dataloader, test_dataloader, epochs, lr,
                                      args_optimizer, mu, dataidxs, device="cpu"):
     logger.info('Training network %s' % str(net_id))
-    # logger.info('n_training: %d' % len(train_dataloader))
-    # logger.info('n_test: %d' % len(test_dataloader))
 
     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
     test_acc, conf_matrix = compute_accuracy_class(net, test_dataloader, get_confusion_matrix=True, device=device)
@@ -713,13 +675,8 @@ def train_net_classifier_calibration(net_id, net, global_net, train_dataloader, 
         target = target.long()
 
         out = net(x)
+
         # 获取feature，并计算按类别计算feature norm
-        # 注意踩坑：最后一个batch的数据量可能是小于batch size的
-
-        # for homo+noise=0.1
-        # size = int(args.batch_size / 1)
-
-        # 对 feature norms 进行计算
         features['output'] = features['output'].reshape(x.size(0), features['output'].shape[1])
         feature_norms = torch.norm(features['output'], p=2, dim=1).cpu().detach().numpy()
 
@@ -732,7 +689,6 @@ def train_net_classifier_calibration(net_id, net, global_net, train_dataloader, 
         cnt += 1
         # 更新loop信息
         loop.set_description(f'Batch [{batch_idx}/{len(test_dataloader)}]')
-        # loop.set_postfix(feature_norm=feature_norm_collector)
 
     # 计算每个类别的平均 feature norm
     for class_label, norms in class_feature_norms.items():
@@ -742,9 +698,6 @@ def train_net_classifier_calibration(net_id, net, global_net, train_dataloader, 
             print(f'Class {class_label}, Avg Feature Norm: {avg_feature_norm}')
 
     logger.info('class_avg_feature_norms length: %s' % (len(class_avg_feature_norms)))    # 313
-    # logger.info('Feature norm collector 2d length1: %s' % (len(feature_norm_collector[0])))
-    # logger.info('Feature norm collector 2d length2: %s' % (len(feature_norm_collector[-1])))
-    # logger.info('Feature norm: %s' % (str(feature_norm_collector)))
 
     # 记录该client本round的acc
     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
@@ -763,10 +716,6 @@ def train_net_classifier_calibration(net_id, net, global_net, train_dataloader, 
 def classifier_calibration(net_id, net, global_net, train_dataloader, test_dataloader, epochs, lr,
                            args_optimizer, mu, dataidxs, class_norm_diffs, device="cpu"):
     logger.info('Calibrate network %s classifier' % str(net_id))
-    # feature_norm_all_clients = feature_norm_all_clients[2:]
-    # logger.info('Feature norm from all clients: %s ' % str(class_norm_diffs))
-    # logger.info('n_training: %d' % len(train_dataloader))
-    # logger.info('n_test: %d' % len(test_dataloader))
 
     net.to(device)
     train_acc = compute_accuracy_class(net, train_dataloader, device=device)
@@ -790,10 +739,6 @@ def classifier_calibration(net_id, net, global_net, train_dataloader, test_datal
     # mu = 0.001
     global_weight_collector = list(global_net.to(device).parameters())
 
-    # 只训练classifier
-    # for layer, param in net.named_parameters():
-    #     if layer != 'fc':
-    #         param.requires_grad = False
     epoch_loss_collector = []
     epoch_acc_collector = []
     global_weight_collector = list(global_net.to(device).parameters())
@@ -825,23 +770,8 @@ def classifier_calibration(net_id, net, global_net, train_dataloader, test_datal
                 class_count = class_mask.sum().item()
                 total_samples = len(target)
                 class_weight = class_count / total_samples
-                # 根据差异调整损失
-                # if net_id == 0:
-                #     loss += args.ccreg_w * class_weight * diff
-                # else:
-                #     loss -= args.ccreg_w * class_weight * diff
                 loss += args.ccreg_w * class_weight * diff
 
-            # --------------------------------fedprox------------------------------------------------
-            # for fedprox
-            # fed_prox_reg = 0.0
-            # for param_index, param in enumerate(net.parameters()):
-            #     fed_prox_reg += ((mu / 2) * torch.norm((param - global_weight_collector[param_index])) ** 2)
-            # loss += fed_prox_reg
-
-            # ---------------------------------------------------------------------------------------
-            # logger.info('loss: %f' % (loss))
-            # logger.info('classifier_calibration_reg: %f' % (classifier_calibration_reg))
 
             _, prediction = out.max(1)
             num_correct = (prediction == target).sum()
@@ -954,10 +884,7 @@ def local_train_net(nets, selected, args, net_dataidx_map, test_dl=None, device=
                                       device=device)
         logger.info("net %d final test acc %f" % (net_id, testacc))
         avg_acc += testacc
-        # saving the trained models here
-        # save_model(net, net_id, args)
-        # else:
-        #     load_model(net, net_id, device=device)
+
     avg_acc /= len(selected)
     if args.alg == 'local_training':
         logger.info("avg test acc %f" % avg_acc)
@@ -1181,8 +1108,6 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
         # move the model to cuda device:
         net.to(device)
 
-        # for (name, module) in net.named_modules():
-        #     print(name)
         # 设置hook，获取中间层输出以获取feature norm
         net.avgpool.register_forward_hook(forward_hook)
 
@@ -1222,13 +1147,9 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
     fed_avg_freqs = [len(net_dataidx_map[r]) / total_data_points for r in selected]
 
     print(fed_avg_freqs)
-    # logger.info("Testing global model para before classifier calibration: %s" % (str(global_para)))
-    # logger.info("Testing global model para before classifier calibration")
+
     for idx in range(len(selected)):
         net_para = nets[selected[idx]].cpu().state_dict()
-        # test_client_acc, _ = compute_accuracy_class(nets[selected[idx]].to(device), test_dl_global, get_confusion_matrix=True,
-        #                                       device=device)
-        # print(selected[idx], test_client_acc)
         if idx == 0:
             for key in net_para:
                 global_para[key] = net_para[key] * fed_avg_freqs[idx]
@@ -1236,9 +1157,6 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
             for key in net_para:
                 global_para[key] += net_para[key] * fed_avg_freqs[idx]
     global_model.load_state_dict(global_para)
-
-    # logger.info('global n_training: %d' % len(train_dl_global))
-    # logger.info('global n_test: %d' % len(test_dl_global))
 
     global_model.to(device)
     train_acc = compute_accuracy_class(global_model, train_dl_global, device=device)
@@ -1287,9 +1205,6 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
     # logger.info("Testing global model para before classifier calibration")
     for idx in range(len(selected)):
         net_para = nets[selected[idx]].cpu().state_dict()
-        # test_client_acc, _ = compute_accuracy_class(nets[selected[idx]].to(device), test_dl_global, get_confusion_matrix=True,
-        #                                       device=device)
-        # print(selected[idx], test_client_acc)
         if idx == 0:
             for key in net_para:
                 global_para[key] = net_para[key] * fed_avg_freqs[idx]
@@ -1297,9 +1212,6 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
             for key in net_para:
                 global_para[key] += net_para[key] * fed_avg_freqs[idx]
     global_model.load_state_dict(global_para)
-
-    # logger.info('global n_training: %d' % len(train_dl_global))
-    # logger.info('global n_test: %d' % len(test_dl_global))
 
     global_model.to(device)
     train_acc = compute_accuracy_class(global_model, train_dl_global, device=device)
@@ -1656,15 +1568,8 @@ if __name__ == '__main__':
             for i in range(len(selected)):
                 d_para = d_list[i]
                 for key in d_para:
-                    # if d_total_round[key].type == 'torch.LongTensor':
-                    #    d_total_round[key] += (d_para[key] * n_list[i] / total_n).type(torch.LongTensor)
-                    # else:
                     d_total_round[key] += d_para[key] * n_list[i] / total_n
 
-            # for i in range(len(selected)):
-            #     d_total_round = d_total_round + d_list[i] * n_list[i] / total_n
-
-            # local_train_net(nets, args, net_dataidx_map, local_split=False, device=device)
 
             # update global model
             coeff = 0.0
