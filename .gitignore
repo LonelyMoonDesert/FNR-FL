@@ -1,0 +1,17 @@
+# .gitignore
+saved_code/
+saved_model/
+logs/
+data_process/
+figures/
+plot_figures/
+scripts/
+tests/
+2 clients classifier calibration resnet class acc n clients FedProx.py
+2 clients classifier calibration resnet class acc n clients SCAFFOLD.py
+2 clients classifier calibration resnet class acc.py
+2 clients classifier calibration resnet.py
+2 clients classifier calibration simplecnn.py
+2 clients classifier calibration vgg.py
+2 clients wo classifier calibration resnet class acc n clients.py
+2 clients wo classifier calibration.py
