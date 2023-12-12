@@ -18,7 +18,62 @@ Paper:
 - [Contribute](#contribute)
 - [License](#license)
 
+## Introduction to codes
+
+```c
+│  .gitignore
+│  10client_label_distribution_skew_data.py
+│  classifier calibration.py
+│  config.py
+│  criteo-dis.npy
+│  datasets.py
+│  draw_noisy_image.py
+│  experiments.py
+│  feature_skewness.py
+│  femnist-dis.npy
+│  LICENSE_FNR-FL
+│  LICENSE_NIID-Bench
+│  model.py
+│  partition.py
+│  partition_to_file.sh
+│  project_structure.txt
+│  README.md
+│  requirements.txt
+│  resnetcifar.py
+│  run.sh
+│  train.py
+│  utils.py
+│  vggmodel.py
+│  view_features.py
+│        
+├─models	// 存放模型文件的文件夹
+│     celeba_model.py
+│     mnist_model.py
+│     svhn_model.py
+│    
+│          
+├─plot_figures
+│      plot_acc.py
+│      
+├─tests
+│      bird.jpg
+│      client drift.py
+│      data_distribution.py
+│      dirichlet.py
+│      draw_convergence.py
+│      effect of fnr.py
+│      label_distribution.py
+│      quantity_skew.py
+│      random_number.py
+│      view_feature_map.py
+│
+
+```
+
+
+
 ## Installation
+
 [(Back to top)](#table-of-contents)
 
 Install dependencies by running:

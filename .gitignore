@@ -6,6 +6,7 @@ data_process/
 figures/
 plot_figures/
 scripts/
+tests/
 2 clients classifier calibration resnet class acc n clients FedProx.py
 2 clients classifier calibration resnet class acc n clients SCAFFOLD.py
 2 clients classifier calibration resnet class acc.py
