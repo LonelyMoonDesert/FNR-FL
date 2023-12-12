@@ -20,52 +20,30 @@ Paper:
 
 ## Introduction to codes
 
-```c
-│  .gitignore
-│  10client_label_distribution_skew_data.py
-│  classifier calibration.py
+```shell
 │  config.py
 │  criteo-dis.npy
 │  datasets.py
-│  draw_noisy_image.py
-│  experiments.py
-│  feature_skewness.py
+│  draw_noisy_image.py	# 观察添加高斯噪声的样本
 │  femnist-dis.npy
-│  LICENSE_FNR-FL
-│  LICENSE_NIID-Bench
+│  LICENSE_FNR-FL	# 本项目（FNR-FL）的MIT LICENSE
+│  LICENSE_NIID-Bench	# 本项目的base code（NIID-Bench）的MIT LICENSE
 │  model.py
 │  partition.py
 │  partition_to_file.sh
-│  project_structure.txt
 │  README.md
 │  requirements.txt
 │  resnetcifar.py
 │  run.sh
-│  train.py
+│  train.py	# 训练入口（for ResNet）
 │  utils.py
 │  vggmodel.py
-│  view_features.py
 │        
-├─models	// 存放模型文件的文件夹
+├─models	# 存放模型文件的文件夹
 │     celeba_model.py
 │     mnist_model.py
 │     svhn_model.py
 │    
-│          
-├─plot_figures
-│      plot_acc.py
-│      
-├─tests
-│      bird.jpg
-│      client drift.py
-│      data_distribution.py
-│      dirichlet.py
-│      draw_convergence.py
-│      effect of fnr.py
-│      label_distribution.py
-│      quantity_skew.py
-│      random_number.py
-│      view_feature_map.py
 │
 
 ```
