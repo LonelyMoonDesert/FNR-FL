@@ -20,3 +20,5 @@ feature_skewness.py
 view_features.py
 10client_label_distribution_skew_data.py
 classifier calibration.py
+partition_to_file.sh
+run.sh
