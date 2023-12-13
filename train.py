@@ -44,17 +44,17 @@ def get_args():
     parser.add_argument('--lr', type=float, default=0.01, help='learning rate (default: 0.01)')
     # local epochs数目： Default = 10
     parser.add_argument('--epochs', type=int, default=10, help='number of local epochs')
-    # calibration epochs数目： Default = 5
-    parser.add_argument('--calibration_epochs', type=int, default=5, help='number of calibration epochs')
-    # calibration reg权重： Default = 1.0
+    # fnr epochs数目： Default = 5
+    parser.add_argument('--fnr_epochs', type=int, default=5, help='number of fnr epochs')
+    # fnr reg权重： Default = 1.0
     parser.add_argument('--ccreg_w', type=float, required=False, default=1.0, help="Weight of ccreg. Default=1.0")
     # 参与方数量：Number of parties, default = 2.
     parser.add_argument('--n_parties', type=int, default=2, help='number of workers in a distributed cluster')
     # percentage of clients to refine.
     parser.add_argument('--cc_p', type=float, default=0.5, help='percentage of clients to refine')
     # FL算法：The training algorithm. Options: fedavg, fedprox, scaffold, fednova, moon. Default = fedavg.
-    parser.add_argument('--alg', type=str, default='fedavg',
-                        help='fl algorithms: fedavg/fedprox/scaffold/fednova/moon')
+    parser.add_argument('--alg', type=str, default='fnr',
+                        help='fl algorithms: fedavg/fedprox/scaffold/fednova/moon/fnr')
     # （MOON算法选项）
     parser.add_argument('--use_projection_head', type=bool, default=False,
                         help='whether add an additional header to model or not (see MOON)')
@@ -94,7 +94,7 @@ def get_args():
     parser.add_argument('--cc_optimizer', type=str, default='adam', help='the cc optimizer')
     # （FedProx参数）
     parser.add_argument('--mu', type=float, default=1, help='the mu parameter for fedprox')
-    # （Classifier Calibration参数）
+    # （fnr参数）
     parser.add_argument('--mu_cc', type=float, default=1, help='the mu parameter for fedprox')
     # 数据噪声
     parser.add_argument('--noise', type=float, default=0, help='how much noise we add to some party')
@@ -601,8 +601,8 @@ def train_net_moon(net_id, net, global_net, previous_nets, train_dataloader, tes
     return train_acc, test_acc
 
 
-# classifier calibration算法step1
-def train_net_classifier_calibration(net_id, net, global_net, train_dataloader, test_dataloader, epochs, lr,
+#  fnr算法step1
+def train_net_fnr(net_id, net, global_net, train_dataloader, test_dataloader, epochs, lr,
                                      args_optimizer, mu, dataidxs, device="cpu"):
     logger.info('Training network %s' % str(net_id))
 
@@ -712,8 +712,8 @@ def train_net_classifier_calibration(net_id, net, global_net, train_dataloader, 
     return net.state_dict(), train_acc, test_acc, class_avg_feature_norms
 
 
-# classifier calibration算法step2
-def classifier_calibration(net_id, net, global_net, train_dataloader, test_dataloader, epochs, lr,
+#  fnr算法step2
+def fnr(net_id, net, global_net, train_dataloader, test_dataloader, epochs, lr,
                            args_optimizer, mu, dataidxs, class_norm_diffs, device="cpu"):
     logger.info('Calibrate network %s classifier' % str(net_id))
 
@@ -742,7 +742,7 @@ def classifier_calibration(net_id, net, global_net, train_dataloader, test_datal
     epoch_loss_collector = []
     epoch_acc_collector = []
     global_weight_collector = list(global_net.to(device).parameters())
-    for epoch in range(args.calibration_epochs):  # hard code
+    for epoch in range(args.fnr_epochs):  # hard code
         loop = tqdm(enumerate(test_dataloader), total=len(test_dataloader))
         for batch_idx, (x, target) in loop:
             x, target = x.to(device), target.to(device)
@@ -755,7 +755,7 @@ def classifier_calibration(net_id, net, global_net, train_dataloader, test_datal
             out = net(x)
 
             loss = criterion(out, target)
-            # for classifier calibration
+            # for  fnr
 
             # ---------------------------------cc----------------------------------------------------
             # 计算当前批次类别的平均特征规范差异
@@ -785,7 +785,7 @@ def classifier_calibration(net_id, net, global_net, train_dataloader, test_datal
             epoch_acc_collector.append(running_train_acc)
 
             # 更新loop信息
-            loop.set_description(f'Epoch [{epoch}/{args.calibration_epochs}]')
+            loop.set_description(f'Epoch [{epoch}/{args.fnr_epochs}]')
             loop.set_postfix(loss=loss.item(), acc=running_train_acc)
 
         epoch_loss = sum(epoch_loss_collector) / len(epoch_loss_collector)
@@ -801,7 +801,7 @@ def classifier_calibration(net_id, net, global_net, train_dataloader, test_datal
     logger.info('>> Test accuracy: %f' % test_acc)
 
     net.to('cpu')
-    logger.info(' ** Classifier calibration complete **')
+    logger.info(' **  fnr complete **')
     return net.state_dict(), train_acc, test_acc
 
 
@@ -1088,7 +1088,7 @@ def local_train_net_moon(nets, selected, args, net_dataidx_map, test_dl=None, gl
     return nets_list
 
 
-def local_train_net_classifier_calibration(nets, selected, global_model, args, net_dataidx_map, test_dl=None,
+def local_train_net_fnr(nets, selected, global_model, args, net_dataidx_map, test_dl=None,
                                            device="cpu"):
     avg_acc = 0.0
 
@@ -1128,7 +1128,7 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
         n_epoch = args.epochs
 
         # test_dl = test_dl_global
-        net_train_tmp_para, trainacc, testacc, class_avg_feature_norms = train_net_classifier_calibration(net_id, net, global_model,
+        net_train_tmp_para, trainacc, testacc, class_avg_feature_norms = train_net_fnr(net_id, net, global_model,
                                                                                 train_dl_local, test_dl_global, n_epoch,
                                                                                 args.lr,
                                                                                 args.optimizer, args.mu, dataidxs,
@@ -1184,7 +1184,7 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
 
     for net_id in net_to_train:
         net_cc_tmp_para, trainacc, testacc = \
-            classifier_calibration(net_id, nets[net_id], global_model, train_dl_local_list[net_id], test_dl_global, n_epoch, args.lr,
+            fnr(net_id, nets[net_id], global_model, train_dl_local_list[net_id], test_dl_global, n_epoch, args.lr,
                                    args.cc_optimizer, args.mu, dataidxs, total_diffs[net_id], device=device)
 
         avg_acc /= len(selected)
@@ -1201,8 +1201,8 @@ def local_train_net_classifier_calibration(nets, selected, global_model, args, n
     fed_avg_freqs = [len(net_dataidx_map[r]) / total_data_points for r in selected]
 
     print(fed_avg_freqs)
-    # logger.info("Testing global model para before classifier calibration: %s" % (str(global_para)))
-    # logger.info("Testing global model para before classifier calibration")
+    # logger.info("Testing global model para before  fnr: %s" % (str(global_para)))
+    # logger.info("Testing global model para before  fnr")
     for idx in range(len(selected)):
         net_para = nets[selected[idx]].cpu().state_dict()
         if idx == 0:
@@ -1690,7 +1690,7 @@ if __name__ == '__main__':
 
         logger.info("All in test acc: %f" % testacc)
 
-    elif args.alg == 'classifier_calibration':
+    elif args.alg == 'fnr':
         logger.info("Initializing nets")
         nets, local_model_meta_data, layer_type = init_nets(args.net_config, args.dropout_p, args.n_parties, args)
         global_models, global_model_meta_data, global_layer_type = init_nets(args.net_config, 0, 1, args)
@@ -1723,7 +1723,7 @@ if __name__ == '__main__':
                     nets[idx].load_state_dict(global_para)
 
             nets, feature_norm_all_clients = \
-                local_train_net_classifier_calibration(nets, selected, global_model,
+                local_train_net_fnr(nets, selected, global_model,
                                                        args, net_dataidx_map, test_dl=test_dl_global, device=device)
             global_model.to('cpu')
 
