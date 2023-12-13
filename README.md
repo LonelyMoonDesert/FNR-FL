@@ -21,30 +21,26 @@ Paper:
 ## Introduction to codes
 
 ```shell
-│  config.py
+│  config.py	
 │  criteo-dis.npy
-│  datasets.py
-│  draw_noisy_image.py	# 观察添加高斯噪声的样本
+│  datasets.py             # Dataset-related
+│  draw_noisy_image.py     # (Additional) Observe samples with added Gaussian noise, use `alg=fedavg` when calling
 │  femnist-dis.npy
-│  LICENSE_FNR-FL	# 本项目（FNR-FL）的MIT LICENSE
-│  LICENSE_NIID-Bench	# 本项目的base code（NIID-Bench）的MIT LICENSE
-│  model.py
-│  partition.py
-│  partition_to_file.sh
+│  LICENSE_FNR-FL          # MIT LICENSE for this project (FNR-FL)
+│  LICENSE_NIID-Bench      # MIT LICENSE for the base code of this project (NIID-Bench)
+│  model.py                # Define some models
+│  partition.py            # Define partitioning functions to achieve different non-i.i.d distributions
 │  README.md
-│  requirements.txt
-│  resnetcifar.py
-│  run.sh
-│  train.py	# 训练入口（for ResNet）
+│  requirements.txt        # Project dependencies
+│  resnetcifar.py          # Define ResNet
+│  train.py                # (Main) Training entry point (for ResNet)
 │  utils.py
-│  vggmodel.py
+│  vggmodel.py             # Define VGG
 │        
-├─models	# 存放模型文件的文件夹
+├─models                    # Folder to store model files
 │     celeba_model.py
 │     mnist_model.py
 │     svhn_model.py
-│    
-│
 
 ```
 
