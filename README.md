@@ -12,10 +12,13 @@ Paper: [Feature Norm Regularized Federated Learning: Transforming Skewed Distrib
 
 - [FNR-FL](#project-title)
 - [Table of Contents](#table-of-contents)
+- [Introduction to codes](#introduction-to-codes)
+- [Experimental settings](#experimental-settings)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Development](#development)
 - [Contribute](#contribute)
+- [Citation](#citation)
+- [Acknowledgements](#acknowledgements)
 - [License](#license)
 
 ## Introduction to codes
@@ -138,7 +141,7 @@ Thanks goes to these wonderful people:
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## Citation
-
+[(Back to top)](#table-of-contents)
 If you find our work useful in your research, please consider citing our paper:
 
 ```shell
@@ -155,7 +158,7 @@ If you find our work useful in your research, please consider citing our paper:
 
 
 ## Acknowledgments
-
+[(Back to top)](#table-of-contents)
 We would like to express our sincere gratitude to the [Xtra-Computing Group](https://github.com/Xtra-Computing) for their [`NIID-Bench`](https://github.com/Xtra-Computing/NIID-Bench) repository, which has been instrumental in the development of our project. Our codebase is built upon the foundational work provided by their extensive research and resources in non-independent and identically distributed (non-i.i.d.) data for federated learning. We appreciate the opportunity to contribute to the ongoing dialogue in this field and thank the Xtra-Computing Group for their valuable contributions to the community.
 
 ## License
