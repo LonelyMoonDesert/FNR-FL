@@ -4,7 +4,7 @@
 
 The official implementation of Feature Norm Regularized Federated Learning (FNR-FL) algorithm, which uniquely incorporates class average feature norms to enhance model accuracy and convergence in non-i.i.d. scenarios.
 
-Paper: [Feature Norm Regularized Federated Learning: Transforming Skewed Distributions into Global Insights](https://arxiv.org/abs/2312.06951)
+Paper: Feature Norm Regularized Federated Learning: Utilizing Data Disparities for Model Performance Gains (Under reviewing)
 
 
 
